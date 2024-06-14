@@ -2,24 +2,25 @@ version: '3.8'
 
 services:
     mongo:
-        image: mongo:latest
-        container_name: mongo-twitter
+        image: mongo
         environment:
-            - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
-            - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD}
+            - MONGO_INITDB_DATABASE=project
         ports:
-            - "${MONGO_PORT}:27017"
-
-    jupyter:
-        image: jupyter/base-notebook:latest
-        container_name: jupyter-notebook
-        ports:
-            - "${JUPYTER_PORT}:8888"
+          - "27017:27017"
+    mongo-express:
+        image: mongo-express
+        environment:
+            - ME_CONFIG_MONGODB_SERVER=mongo
+            - ME_CONFIG_MONGODB_PORT=27017
+            - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+            - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+            - ME_CONFIG_MONGODB_AUTH_USERNAME=${MONGO_ROOT_USER}
+            - ME_CONFIG_MONGODB_AUTH_PASSWORD=${MONGO_ROOT_PASSWORD}
+            - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN}
+            - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD}
         depends_on:
             - mongo
-        command: start-notebook.sh --NotebookApp.token=''
-
-volumes:
-    mongo_data:
-    jupyter_data:
+        ports:
+          - "8888:8081"
