@@ -1,4 +1,4 @@
-name: testenv
+name: twitter
 channels:
   - defaults
 dependencies:
