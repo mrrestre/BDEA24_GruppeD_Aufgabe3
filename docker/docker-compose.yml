@@ -24,3 +24,26 @@ services:
             - mongo
         ports:
             - "8888:8081"
+    mongo2:
+        image: mongo
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=${MONGO_ROOT_USER2}
+            - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ROOT_PASSWORD2}
+            - MONGO_INITDB_DATABASE=project2
+        ports:
+            - "27018:27017"
+    mongo-express2:
+        image: mongo-express
+        environment:
+            - ME_CONFIG_MONGODB_SERVER=mongo2
+            - ME_CONFIG_MONGODB_PORT=27017
+            - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+            - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+            - ME_CONFIG_MONGODB_AUTH_USERNAME=${MONGO_ROOT_USER2}
+            - ME_CONFIG_MONGODB_AUTH_PASSWORD=${MONGO_ROOT_PASSWORD2}
+            - ME_CONFIG_BASICAUTH_USERNAME=${MONGOEXPRESS_LOGIN2}
+            - ME_CONFIG_BASICAUTH_PASSWORD=${MONGOEXPRESS_PASSWORD2}
+        depends_on:
+            - mongo2
+        ports:
+            - "8889:8081"
